@@ -2,15 +2,14 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:pixel_adventure/components/background_tile.dart';
+import 'package:pixel_adventure/components/checkpoint.dart';
 import 'package:pixel_adventure/components/collision_block.dart';
 import 'package:pixel_adventure/components/fruit.dart';
 import 'package:pixel_adventure/components/player.dart';
 import 'package:pixel_adventure/components/saw.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 
-class Level extends World 
-  with HasGameRef<PixelAdventure> {
-
+class Level extends World with HasGameRef<PixelAdventure> {
   final String levelName;
   final Player player;
   Level({required this.levelName, required this.player});
@@ -29,7 +28,7 @@ class Level extends World
 
     return super.onLoad();
   }
-  
+
   //________________Fix: backgound scroling has delay at the begin times
   void _scrollingBackground() {
     final backgroundLayer = level.tileMap.getLayer('Background');
@@ -38,12 +37,12 @@ class Level extends World
     final numTilesY = (game.size.y / tileSize).floor();
     final numTilesX = (game.size.x / tileSize).floor();
 
-    if(backgroundLayer != null){
-      final backgroundColor = 
+    if (backgroundLayer != null) {
+      final backgroundColor =
           backgroundLayer.properties.getValue('BackgroundColor');
-      
-      for(double y = 0; y < game.size.y / numTilesY; y++){
-        for(double x = 0; x < numTilesX; x++){
+
+      for (double y = 0; y < game.size.y / numTilesY; y++) {
+        for (double x = 0; x < numTilesX; x++) {
           final backgroundTile = BackgroundTile(
             color: backgroundColor ?? "Gray",
             position: Vector2(x * tileSize, y * tileSize),
@@ -54,11 +53,11 @@ class Level extends World
       }
     }
   }
-  
+
   void _spawmingObjects() {
     final spawnPointsLayer = level.tileMap.getLayer<ObjectGroup>('SpawnPoints');
 
-    if(spawnPointsLayer != null){
+    if (spawnPointsLayer != null) {
       for (final spawnPoint in spawnPointsLayer.objects) {
         switch (spawnPoint.class_) {
           case 'Player':
@@ -67,9 +66,9 @@ class Level extends World
             break;
           case 'Fruit':
             final fruit = Fruit(
-            fruit: spawnPoint.name,
-            position: Vector2(spawnPoint.x, spawnPoint.y),
-            size: Vector2(spawnPoint.width, spawnPoint.height),
+              fruit: spawnPoint.name,
+              position: Vector2(spawnPoint.x, spawnPoint.y),
+              size: Vector2(spawnPoint.width, spawnPoint.height),
             );
             add(fruit);
             break;
@@ -86,17 +85,24 @@ class Level extends World
             );
             add(saw);
             break;
+          case 'CheckPoint':
+            final checkpoint = Checkpoint(
+              position: Vector2(spawnPoint.x, spawnPoint.y),
+              size: Vector2(spawnPoint.width, spawnPoint.height),
+            );
+            add(checkpoint);
+            break;
           default:
         }
       }
     }
   }
-  
+
   void _addCollisions() {
     final collisionsLayer = level.tileMap.getLayer<ObjectGroup>('Collisions');
 
-    if(collisionsLayer != null) {
-      for(final collision in collisionsLayer.objects) {
+    if (collisionsLayer != null) {
+      for (final collision in collisionsLayer.objects) {
         switch (collision.class_) {
           case 'Platform':
             final platform = CollisionBlock(
@@ -108,12 +114,12 @@ class Level extends World
             add(platform);
             break;
           default:
-          final block = CollisionBlock(
-            position: Vector2(collision.x, collision.y),
+            final block = CollisionBlock(
+              position: Vector2(collision.x, collision.y),
               size: Vector2(collision.width, collision.height),
-          );
-          collsionBlocks.add(block);
-          add(block);
+            );
+            collsionBlocks.add(block);
+            add(block);
         }
       }
     }

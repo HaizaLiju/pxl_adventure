@@ -9,12 +9,10 @@ import 'package:pixel_adventure/components/saw.dart';
 import 'package:pixel_adventure/components/utils.dart';
 import 'package:pixel_adventure/pixel_adventure.dart';
 
-enum PlayerState { idle, running, jumping, falling , hitting, appearing}
+enum PlayerState { idle, running, jumping, falling, hitting, appearing }
 
 class Player extends SpriteAnimationGroupComponent
-    with HasGameRef<PixelAdventure>, KeyboardHandler,
-          CollisionCallbacks {
-            
+    with HasGameRef<PixelAdventure>, KeyboardHandler, CollisionCallbacks {
   String character;
   Player({position, this.character = 'Mask Dude'}) : super(position: position);
 
@@ -28,7 +26,7 @@ class Player extends SpriteAnimationGroupComponent
   late final SpriteAnimation appearingAnimation;
 
   final double _gravity = 9.8;
-  final double _jumpForce = 460;
+  final double _jumpForce = 300;
   final double _terminalVelocity = 300;
 
   double horizontalMovement = 0;
@@ -52,7 +50,7 @@ class Player extends SpriteAnimationGroupComponent
     // debugMode = true;
 
     startingPosition = Vector2(position.x, position.y);
-    
+
     add(RectangleHitbox(
       position: Vector2(hitbox.offsetX, hitbox.offsetY),
       size: Vector2(hitbox.width, hitbox.height),
@@ -62,15 +60,14 @@ class Player extends SpriteAnimationGroupComponent
 
   @override
   void update(double dt) {
-    if(!gotHit){
-    _updatePlayerState();
-    _updatePlayerMovement(dt);
-    _checkHorizontalCollisions();
-    _applyGravity(dt);
-    _checkVerticalCollisions();
+    if (!gotHit) {
+      _updatePlayerState();
+      _updatePlayerMovement(dt);
+      _checkHorizontalCollisions();
+      _applyGravity(dt);
+      _checkVerticalCollisions();
     }
 
-    
     super.update(dt);
   }
 
@@ -78,26 +75,27 @@ class Player extends SpriteAnimationGroupComponent
   bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     horizontalMovement = 0;
 
-    final isLeftKeyPressed =
-        keysPressed.contains(LogicalKeyboardKey.keyA) ||
+    final isLeftKeyPressed = keysPressed.contains(LogicalKeyboardKey.keyA) ||
         keysPressed.contains(LogicalKeyboardKey.arrowLeft);
 
-    final isRightKeyPressed =
-        keysPressed.contains(LogicalKeyboardKey.keyD) ||
+    final isRightKeyPressed = keysPressed.contains(LogicalKeyboardKey.keyD) ||
         keysPressed.contains(LogicalKeyboardKey.arrowRight);
 
     horizontalMovement += isLeftKeyPressed ? -1 : 0;
     horizontalMovement += isRightKeyPressed ? 1 : 0;
 
-    hasJump = keysPressed.contains(LogicalKeyboardKey.space);
+    // Only set hasJump to true on key down event for space
+    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.space) {
+      hasJump = true;
+    }
 
     return super.onKeyEvent(event, keysPressed);
   }
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-    if(other is Fruit) other.collidedWithPlayer();
-    if(other is Saw) _respawn();
+    if (other is Fruit) other.collidedWithPlayer();
+    if (other is Saw) _respawn();
     super.onCollision(intersectionPoints, other);
   }
 
@@ -232,16 +230,17 @@ class Player extends SpriteAnimationGroupComponent
       }
     }
   }
-  
+
   void _respawn() {
     const hitDuration = Duration(microseconds: 350);
     const appearingDuration = Duration(milliseconds: 350);
+
     /// const canMoveDuration = Duration(milliseconds: 400);
 
     gotHit = true;
     current = PlayerState.hitting;
-    
-    Future.delayed(hitDuration, (){
+
+    Future.delayed(hitDuration, () {
       scale.x = 1;
       position = startingPosition - Vector2.all(32);
       current = PlayerState.appearing;
@@ -254,6 +253,5 @@ class Player extends SpriteAnimationGroupComponent
         // Future.delayed(canMoveDuration,() => gotHit = false);
       });
     });
-
   }
 }
