@@ -7,49 +7,34 @@ import 'package:pixel_adventure/components/player.dart';
 import 'package:pixel_adventure/components/level.dart';
 
 class PixelAdventure extends FlameGame
-    with HasKeyboardHandlerComponents, DragCallbacks,
-          HasCollisionDetection {
-
+    with HasKeyboardHandlerComponents, DragCallbacks, HasCollisionDetection {
   @override
   Color backgroundColor() => const Color(0xFF211F30);
-  late final CameraComponent cam;
+  late CameraComponent cam;
   Player player = Player(character: 'Pink Man');
   late JoystickComponent joystick;
   bool showJoystick = false;
+  List<String> levelNames = ['Level-01', 'Level-01'];
+  int currentLevelIndex = 0;
 
   @override
   FutureOr<void> onLoad() async {
     //Load all images into cache
     await images.loadAllImages();
-
-    final world = Level(player: player, levelName: 'Level-01');
-
-    cam = CameraComponent.withFixedResolution(
-      world: world,
-      width: 640,
-      height: 360,
-    );
-    cam.priority = 2;
-    cam.viewfinder.anchor = Anchor.topLeft;
-
-    addAll([cam, world]);
-
-    if (showJoystick){
-      addJoystick();
-    }
-    
+    _loadLevel();
+    if (showJoystick) _addJoystick();
     return super.onLoad();
   }
 
   @override
   void update(double dt) {
-    if(showJoystick){
+    if (showJoystick) {
       updateJoystick();
     }
     super.update(dt);
   }
 
-  void addJoystick() {
+  void _addJoystick() {
     joystick = JoystickComponent(
       priority: 2,
       knob: SpriteComponent(sprite: Sprite(images.fromCache('HUD/Knob.png'))),
@@ -61,7 +46,7 @@ class PixelAdventure extends FlameGame
 
     add(joystick);
   }
-  
+
   void updateJoystick() {
     switch (joystick.direction) {
       case JoystickDirection.upLeft:
@@ -78,5 +63,31 @@ class PixelAdventure extends FlameGame
         player.horizontalMovement = 0;
         break;
     }
+  }
+
+  void loadNextLevel() {
+    if (currentLevelIndex < levelNames.length - 1) {
+      currentLevelIndex++;
+      _loadLevel();
+    } else {}
+  }
+
+  void _loadLevel() {
+    Future.delayed(const Duration(seconds: 1), () {
+      Level world = Level(
+      player: player,
+      levelName: levelNames[currentLevelIndex],
+    );
+
+    cam = CameraComponent.withFixedResolution(
+      world: world,
+      width: 640,
+      height: 360,
+    );
+    cam.priority = 2;
+    cam.viewfinder.anchor = Anchor.topLeft;
+
+    addAll([cam, world]);
+    });
   }
 }
