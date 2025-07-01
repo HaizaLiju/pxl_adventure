@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="40" height="23" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="180">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="40" height="23" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="181">
  <properties>
   <property name="BackgroundColor" value="Gray"/>
  </properties>
@@ -25,7 +25,7 @@
 24,24,24,113,0,0,0,0,0,0,0,0,0,0,0,0,0,40,41,42,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,111,24,24,24,
 24,24,24,113,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,8,8,111,24,24,24,
 24,24,24,113,35,13,14,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,8,30,30,30,111,24,24,24,
-24,24,24,113,7,8,8,8,8,9,0,0,0,0,13,14,15,0,0,0,0,13,14,15,0,0,0,0,7,8,8,30,30,30,30,30,111,24,24,24,
+24,24,24,113,7,8,8,8,8,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,8,8,30,30,30,30,30,111,24,24,24,
 24,24,24,113,29,30,30,30,30,31,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29,30,30,30,30,30,30,31,111,24,24,24,
 24,24,24,113,51,52,52,52,52,53,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,51,52,30,30,30,30,52,53,111,24,24,24,
 24,24,24,114,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,90,115,24,24,24,
@@ -45,22 +45,11 @@
   <object id="141" name="Bananas" type="Fruit" x="208" y="80" width="32" height="32"/>
   <object id="142" name="Bananas" type="Fruit" x="256" y="96" width="32" height="32"/>
   <object id="143" name="Orange" type="Fruit" x="480" y="112" width="32" height="32"/>
-  <object id="145" name="Apple" type="Fruit" x="160" y="272" width="32" height="32"/>
   <object id="146" name="Orange" type="Fruit" x="448" y="112" width="32" height="32"/>
   <object id="147" name="Orange" type="Fruit" x="464" y="80" width="32" height="32"/>
   <object id="148" name="Orange" type="Fruit" x="400" y="96" width="32" height="32"/>
   <object id="149" name="Orange" type="Fruit" x="320" y="112" width="32" height="32"/>
-  <object id="152" name="Melon" type="Fruit" x="352" y="272" width="32" height="32"/>
-  <object id="154" name="Melon" type="Fruit" x="256" y="272" width="32" height="32"/>
-  <object id="159" name="Apple" type="Fruit" x="224" y="224" width="32" height="32"/>
   <object id="162" name="Apple" type="Fruit" x="528" y="96" width="32" height="32"/>
-  <object id="163" name="Saw" type="Saw" x="288" y="288" width="32" height="32">
-   <properties>
-    <property name="isVertical" type="bool" value="false"/>
-    <property name="offNeg" type="float" value="8"/>
-    <property name="offPos" type="float" value="8"/>
-   </properties>
-  </object>
   <object id="167" name="Saw" type="Saw" x="400" y="192" width="32" height="32">
    <properties>
     <property name="isVertical" type="bool" value="true"/>
@@ -69,6 +58,12 @@
    </properties>
   </object>
   <object id="179" type="CheckPoint" x="512" y="160" width="64" height="65"/>
+  <object id="180" name="Chicken" type="Chicken" x="304.333" y="269.833" width="34" height="33">
+   <properties>
+    <property name="offNeg" type="float" value="12"/>
+    <property name="offPos" type="float" value="5"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="3" name="Collisions" class="Platform">
   <object id="6" x="48" y="48" width="16" height="255.333"/>
@@ -90,8 +85,6 @@
   <object id="63" type="Platform" x="448" y="144" width="80" height="16"/>
   <object id="64" x="528" y="128" width="48" height="16"/>
   <object id="65" type="Platform" x="272" y="208" width="48" height="16"/>
-  <object id="67" x="224" y="256" width="48" height="16"/>
-  <object id="68" x="336" y="256" width="48" height="16"/>
   <object id="168" x="528.167" y="224.25" width="48.5" height="79.75"/>
  </objectgroup>
 </map>

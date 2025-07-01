@@ -19,6 +19,8 @@ class PixelAdventure extends FlameGame
   Player player = Player(character: 'Pink Man');
   late JoystickComponent joystick;
   bool showControls = false;
+  bool playSounds = true;
+  double soundVolume = 1.0;
   List<String> levelNames = ['Level-01', 'Level-01'];
   int currentLevelIndex = 0;
 
@@ -77,7 +79,10 @@ class PixelAdventure extends FlameGame
     if (currentLevelIndex < levelNames.length - 1) {
       currentLevelIndex++;
       _loadLevel();
-    } else {}
+    } else {
+      currentLevelIndex = 0; // Reset to first level if at the end
+      _loadLevel();
+    }
   }
 
   void _loadLevel() {
