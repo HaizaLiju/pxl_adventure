@@ -138,6 +138,7 @@ class Player extends SpriteAnimationGroupComponent
         amount: amount,
         stepTime: stepTime,
         textureSize: Vector2.all(96),
+        loop: false,
       ),
     );
   }
@@ -147,7 +148,7 @@ class Player extends SpriteAnimationGroupComponent
     runningAnimation = _spriteAnimation('Run', 12);
     jumpingAnimation = _spriteAnimation('Jump', 1);
     fallingAnimation = _spriteAnimation('Fall', 1);
-    hittingAnimation = _spriteAnimation('Hit', 7);
+    hittingAnimation = _spriteAnimation('Hit', 7)..loop = false;
 
     appearingAnimation = _specialSpriteAnimation('Appearing', 7);
     disappearingAnimation = _specialSpriteAnimation('Desappearing', 7);
@@ -256,30 +257,29 @@ class Player extends SpriteAnimationGroupComponent
     }
   }
 
-  void _respawn() {
-    const hitDuration = Duration(microseconds: 350);
-    const appearingDuration = Duration(milliseconds: 350);
+  void _respawn() async {
     const canMoveDuration = Duration(milliseconds: 400);
 
     gotHit = true;
     current = PlayerState.hitting;
 
-    Future.delayed(hitDuration, () {
-      scale.x = 1;
-      position = startingPosition - Vector2.all(32);
-      current = PlayerState.appearing;
+    await animationTicker?.completed;
+    animationTicker?.reset();
 
-      Future.delayed(appearingDuration, () {
-        velocity = Vector2.zero();
-        position = startingPosition;
-        _updatePlayerState();
-        gotHit = false;
-        Future.delayed(canMoveDuration, () => gotHit = false);
-      });
-    });
+    scale.x = 1;
+    position = startingPosition - Vector2.all(32);
+    current = PlayerState.appearing;
+
+    await animationTicker?.completed;
+    animationTicker?.reset();
+
+    velocity = Vector2.zero();
+    position = startingPosition;
+    _updatePlayerState();
+    Future.delayed(canMoveDuration, () => gotHit = false);
   }
 
-  void _reachCheckpoint() {
+  void _reachCheckpoint() async {
     reachedCheckpoint = true;
     if (scale.x > 0) {
       position = Vector2.all(32);
@@ -288,15 +288,13 @@ class Player extends SpriteAnimationGroupComponent
     }
     current = PlayerState.disappearing;
 
-    const reachedCheckpointDuration = Duration(milliseconds: 350);
-    Future.delayed(reachedCheckpointDuration, () {
-      reachedCheckpoint = false;
-      position = Vector2.all(-640);
+    await animationTicker?.completed;
+    animationTicker?.reset();
 
-      const waitToChangeDuration = Duration(seconds: 3);
-      Future.delayed(waitToChangeDuration, () {
-        game.loadNextLevel();
-      });
-    });
+    reachedCheckpoint = false;
+    position = Vector2.all(-640);
+
+    const waitToChangeDuration = Duration(seconds: 3);
+    Future.delayed(waitToChangeDuration, () => game.loadNextLevel());
   }
 }
